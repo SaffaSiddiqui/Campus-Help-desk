@@ -175,5 +175,3 @@ npm run lint
 
 ## 📄 License
 This project is created for university campus facilities and educational use.
-#   C a m p u s - H e l p - d e s k  
- 
