@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Ticket, TicketFormData, TicketStatus, TicketStats } from './types/ticket.ts';
 import { ticketStorage } from './services/ticketStorage.ts';
 import { Navbar, type ActiveTab } from './components/Navbar.tsx';
@@ -14,6 +14,31 @@ function App() {
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [trackingTicketId, setTrackingTicketId] = useState<string>('');
+
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem('campus_helpdesk_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('campus_helpdesk_theme', theme);
+    } catch {
+      // Ignore storage errors
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   const addToast = (type: 'success' | 'info' | 'warning' | 'error', title: string, message?: string) => {
     const newToast: ToastMessage = {
@@ -126,6 +151,8 @@ function App() {
           }
         }}
         pendingCount={stats.pending}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}

@@ -5,6 +5,8 @@ import {
   SearchIcon,
   DashboardIcon,
   ShieldIcon,
+  SunIcon,
+  MoonIcon,
 } from './Icons.tsx';
 
 export type ActiveTab = 'submit' | 'track' | 'admin';
@@ -13,12 +15,16 @@ interface NavbarProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   pendingCount: number;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onTabChange,
   pendingCount,
+  theme,
+  onToggleTheme,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -76,8 +82,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Portal status badge & Mobile menu button */}
+        {/* Theme toggle, Portal status badge & Mobile menu button */}
         <div className="navbar-right">
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={onToggleTheme}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'light' ? <MoonIcon size={18} /> : <SunIcon size={18} />}
+            <span className="theme-toggle-text">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
+
           <div className="system-status-indicator" title="Local storage active">
             <span className="status-dot"></span>
             <span className="status-label">Portal Live</span>
@@ -125,6 +142,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             {pendingCount > 0 && (
               <span className="nav-badge">{pendingCount} pending</span>
             )}
+          </button>
+
+          <button
+            type="button"
+            className="mobile-nav-btn mobile-theme-btn"
+            onClick={() => {
+              onToggleTheme();
+              setMobileMenuOpen(false);
+            }}
+          >
+            {theme === 'light' ? <MoonIcon size={20} /> : <SunIcon size={20} />}
+            <span>{theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}</span>
           </button>
         </div>
       )}
