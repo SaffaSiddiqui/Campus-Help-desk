@@ -1,0 +1,48 @@
+{
+  "lint-after-edit": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd .. && npm run lint 2>&1",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "git-diff-after-edit": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd .. && git diff --stat",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "build-check-after-edit": {
+    "enabled": false,
+    "PostToolUse": [
+      {
+        "matcher": "write_file|edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd .. && npm run build 2>&1",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
+
